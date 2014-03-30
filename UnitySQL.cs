@@ -52,8 +52,23 @@ namespace UnitySQL {
         }
 
 
-        public static List<Dictionary<string, string>> QueryAsList(string query) {
-            List<Dictionary<string, string>> _list = new List<Dictionary<string, string>>();
+        public static List<Dictionary<string, object>> QueryAsList(string query) {
+            List<Dictionary<string, object>> _list = new List<Dictionary<string, object>>();
+            IDataReader _reader = QueryAsReader(query);
+            DataColumnCollection _columns = _reader.GetSchemaTable().Columns;
+
+            for (int r = 0; r < _reader.FieldCount; r++) {
+                _reader.Read();
+
+                Dictionary<string, object> _record = new Dictionary<string, object>();
+
+                foreach(DataColumn _column in _columns) {
+                    _record.Add(_column.ColumnName, _reader.GetValue(r));
+                }
+
+                _list.Add(_record);
+            }
+
             return _list;
         }
 

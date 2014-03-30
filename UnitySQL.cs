@@ -1,4 +1,7 @@
 using System;
+using System.Data;
+using System.Collections;
+using System.Collections.Generic;
 using Mono.Data.SqliteClient;
 
 namespace UnitySQL {
@@ -36,7 +39,23 @@ namespace UnitySQL {
 
         //Sets up the database
         public static void Setup() {
-            _dbcon = new IDbConnection(_uri);
+            _dbcon = (IDbConnection) new SqliteConnection(_uri);
+            _dbcon.Open();
         }
+
+
+        public static IDataReader QueryAsReader(string query) {
+            IDbCommand _cmd = _dbcon.CreateCommand();
+            _cmd.CommandText = query;
+
+            return _cmd.ExecuteReader();
+        }
+
+
+        public static List<Dictionary<string, string>> QueryAsList(string query) {
+            List<Dictionary<string, string>> _list = new List<Dictionary<string, string>>();
+            return _list;
+        }
+
     }
 }

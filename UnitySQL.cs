@@ -85,9 +85,9 @@ namespace UnitySQL {
         public static void CreateTable(string name, string pKey, Column[] columns) {
             string _sql;
 
-            _sql = "CEATE TABLE `" + name + "` (\n"
-            foreach (string _s in columns) {
-                _sql = _sql + _s + "\n";
+            _sql = "CEATE TABLE `" + name + "` (\n";
+            foreach (Column _c in columns) {
+                _sql = _sql + _c.sql + "\n";
             }
             _sql = _sql + "PRIMARY KEY (`" + pKey + "`)\n);";
         }
@@ -104,11 +104,11 @@ namespace UnitySQL {
 
         public string sql;
 
-        public Column(string name, string type, int length = null, bool notNull = false, object defaultValue = null) {
+        public Column(string name, string type, int length = 0, bool notNull = false, object defaultValue = null) {
             BuildSQL();
         }
 
-        public Column(string name, string type, int length = null, int length2 = null, bool notNull = false, object defaultValue = null) {
+        public Column(string name, string type, int length = 0, int length2 = 0, bool notNull = false, object defaultValue = null) {
             BuildSQL();
         }
 
@@ -121,9 +121,9 @@ namespace UnitySQL {
             string _notNull;
             string _defaultString;
 
-            if ((length2 != null) && (length != null)) {
+            if ((length2 != null) && (length != null) && (length2 != 0) && (length != 0)) {
                 _typeArgs = "(" + length.ToString() + "," + length2.ToString() + ")";
-            } else if((length2 == null) && (length != null)) {
+            } else if(((length2 == null) ||(length2 == 0)) && (length != null) && (length != 0)) {
                 _typeArgs = "(" + length.ToString() + ")";
             } else {
                 _typeArgs = "";

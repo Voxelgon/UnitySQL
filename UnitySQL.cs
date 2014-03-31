@@ -93,31 +93,11 @@ namespace UnitySQL {
 
         public string sql;
 
-        public Column(string name, string type) {
+        public Column(string name, string type, int length = null, bool notNull = false, object defaultValue = null) {
             BuildSQL();
         }
 
-        public Column(string name, string type, int length) {
-            BuildSQL();
-        }
-
-        public Column(string name, string type, int length, int length2) {
-            BuildSQL();
-        }
-
-        public Column(string name, string type, int length, bool notNull) {
-            BuildSQL();
-        }
-
-        public Column(string name, string type, int length, int length2, bool notNull) {
-            BuildSQL();
-        }
-
-        public Column(string name, string type, int length, bool notNull, object defaultValue) {
-            BuildSQL();
-        }
-
-        public Column(string name, string type, int length, int length2, bool notNull, object defaultValue) {
+        public Column(string name, string type, int length = null, int length2 = null, bool notNull = false, object defaultValue = null) {
             BuildSQL();
         }
 

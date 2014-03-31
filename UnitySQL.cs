@@ -44,6 +44,14 @@ namespace UnitySQL {
         }
 
 
+        public static void Query(string query) {
+            IDbCommand _cmd = _dbcon.CreateCommand();
+            _cmd.CommandText = query;
+            IDataReader _reader = _cmd.ExecuteReader();
+            _reader.Close();
+        }
+
+
         public static IDataReader QueryAsReader(string query) {
             IDbCommand _cmd = _dbcon.CreateCommand();
             _cmd.CommandText = query;
@@ -69,8 +77,82 @@ namespace UnitySQL {
                 _list.Add(_record);
             }
 
+            _reader.Close();
             return _list;
         }
 
+    }
+
+    public class Column : object {
+        public string name;
+        public string type = "int";
+        public int length;
+        public int length2;
+        public bool notNull;
+        public object defaultValue = null;
+
+        public string sql;
+
+        public Column(string name, string type) {
+            BuildSQL();
+        }
+
+        public Column(string name, string type, int length) {
+            BuildSQL();
+        }
+
+        public Column(string name, string type, int length, int length2) {
+            BuildSQL();
+        }
+
+        public Column(string name, string type, int length, bool notNull) {
+            BuildSQL();
+        }
+
+        public Column(string name, string type, int length, int length2, bool notNull) {
+            BuildSQL();
+        }
+
+        public Column(string name, string type, int length, bool notNull, object defaultValue) {
+            BuildSQL();
+        }
+
+        public Column(string name, string type, int length, int length2, bool notNull, object defaultValue) {
+            BuildSQL();
+        }
+
+        public Column(string sql) {
+            BuildSQL();
+        }
+
+
+        public void BuildSQL() {
+            string _typeArgs;
+            string _notNull;
+            string _defaultString;
+
+            if ((length2 != null) && (length != null)) {
+                _typeArgs = "(" + length.ToString() + "," + length2.ToString() + ")";
+            } else if((length2 == null) && (length != null)) {
+                _typeArgs = "(" + length.ToString() + ")";
+            } else {
+                _typeArgs = "";
+            }
+
+            if (notNull == true) {
+                _notNull = "NOT NULL";
+            } else {
+                _notNull = "";
+            }
+
+            if(defaultValue == null) {
+                _defaultString = "DEFAULT NULL";
+            } else {
+                _defaultString = "DEFAULT '" + defaultValue.ToString() + "'";
+            }
+
+            sql = "`" + name + "` " + type + _typeArgs + " "  + _notNull + " " + _defaultString + ",";
+
+        }
     }
 }

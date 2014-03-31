@@ -81,6 +81,17 @@ namespace UnitySQL {
             return _list;
         }
 
+
+        public static void CreateTable(string name, string pKey, Column[] columns) {
+            string _sql;
+
+            _sql = "CEATE TABLE `" + name + "` (\n"
+            foreach (string _s in columns) {
+                _sql = _sql + _s + "\n";
+            }
+            _sql = _sql + "PRIMARY KEY (`" + pKey + "`)\n);";
+        }
+
     }
 
     public class Column : object {
@@ -102,7 +113,6 @@ namespace UnitySQL {
         }
 
         public Column(string sql) {
-            BuildSQL();
         }
 
 

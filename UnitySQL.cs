@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Mono.Data.SqliteClient;
 
 namespace UnitySQL {
@@ -79,6 +80,42 @@ namespace UnitySQL {
 
             _reader.Close();
             return _list;
+        }
+
+
+
+        private static string ReadFile(string path) {
+            StreamReader _sr = new StreamReader(path);
+            string contents;
+
+            try {
+                contents = _sr.ReadToEnd();
+            }
+            catch(System.IO.IOException exception) {
+                return null;
+            }
+
+            return contents;
+        }
+
+
+        public static void RunFile(string path) {
+            string _query = ReadFile(path);
+            Query(_query);
+        }
+
+
+        public static IDataReader RunFileAsReader(string path) {
+            string _query = ReadFile(path);
+
+            return QueryAsReader(_query);
+        }
+
+
+        public static List<Dictionary<string, object>> RunFileAsList(string path) {
+            string _query = ReadFile(path);
+
+            return QueryAsList(_query);
         }
     }
 }

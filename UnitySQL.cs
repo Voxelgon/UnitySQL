@@ -7,7 +7,7 @@ using Mono.Data.SqliteClient;
 
 namespace UnitySQL {
 
-    public static class UnitySQL {
+    public static class SQLite {
 
         private static string _uri = "URI=file:SQLite.db";
         private static string _dbName = "SQLite";
@@ -42,6 +42,19 @@ namespace UnitySQL {
         public static void Setup() {
             _dbcon = (IDbConnection) new SqliteConnection(_uri);
             _dbcon.Open();
+        }
+        
+
+
+        public static int Count(string table, string column) {
+
+            string sql = string.Format("SELECT COUNT(`{0}`) c FROM {1}", column, table);
+            IDataReader reader = QueryAsReader(sql);
+
+            reader.Read();
+            int count = reader.GetInt32(0);
+
+            return count;
         }
         
 

@@ -43,6 +43,7 @@ namespace UnitySQL {
             _dbcon = (IDbConnection) new SqliteConnection(_uri);
             _dbcon.Open();
         }
+        
 
 
         public static void Query(string query) {

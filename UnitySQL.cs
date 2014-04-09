@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -194,6 +195,62 @@ namespace UnitySQL {
             string _query = ReadFile(path);
 
             return QueryAsList(_query, parameters);
+        }
+
+        
+
+        public static void Insert(string table, List<Dictionary<string, object>> data) {
+            StringBuilder _sql = new StringBuilder();
+            _sql.Append("INSERT INTO `" + table + "` (");
+
+            if(data.Count == 0) {
+                return;
+            }
+            
+            int _index = 0;
+            foreach(KeyValuePair<string, object> _pair in data[0]) {
+                _sql.Append(" `");
+                _sql.Append(_pair.Key);
+                _sql.Append("`");
+
+                if (_index < (data[0].Count - 1)) {
+                    _sql.Append(",");
+                }
+
+                _index++;
+            }
+
+            _sql.Append(")\n");
+            _sql.Append("VALUES");
+
+            _index = 0;
+            foreach(Dictionary<string, object> _row in data) {
+                _index++;
+                _sql.Append("(");
+
+                int _index2 = 0;
+                foreach(KeyValuePair<string, object> _pair in _row) {
+                    _sql.Append(" '");
+                    _sql.Append(_pair.Value);
+                    _sql.Append("'");
+
+                    if(_index2 < (_row.Count - 1)) {
+                        _sql.Append(",");
+                    }
+
+                    _index2++;
+                }
+
+                _sql.Append(")");
+
+                if (_index < (data.Count - 1)) {
+                    _sql.Append(",\n");
+                }
+
+                _index++;
+            }
+
+            Query(_sql.ToString());
         }
     }
 }

@@ -61,95 +61,95 @@ namespace UnitySQL {
 
 
         public static void Query(string query) {
-            IDbCommand _cmd = _dbcon.CreateCommand();
-            _cmd.CommandText = query;
-            IDataReader _reader = _cmd.ExecuteReader();
-            _reader.Close();
+            IDbCommand cmd = _dbcon.CreateCommand();
+            cmd.CommandText = query;
+            IDataReader reader = cmd.ExecuteReader();
+            reader.Close();
         }
 
         public static void Query(string query, Dictionary<string, string> parameters) {
-            IDbCommand _cmd = _dbcon.CreateCommand();
-            _cmd.CommandText = query;
+            IDbCommand cmd = _dbcon.CreateCommand();
+            cmd.CommandText = query;
 
-            foreach(KeyValuePair<string, string> _param in parameters) {
-                _cmd.Parameters.Add(new SqliteParameter(_param.Key, _param.Value));
+            foreach(KeyValuePair<string, string> param in parameters) {
+                cmd.Parameters.Add(new SqliteParameter(param.Key, param.Value));
             }
 
-            IDataReader _reader = _cmd.ExecuteReader();
-            _reader.Close();
+            IDataReader reader = cmd.ExecuteReader();
+            reader.Close();
         }
 
 
 
         public static IDataReader QueryAsReader(string query) {
-            IDbCommand _cmd = _dbcon.CreateCommand();
-            _cmd.CommandText = query;
+            IDbCommand cmd = _dbcon.CreateCommand();
+            cmd.CommandText = query;
 
-            return _cmd.ExecuteReader();
+            return cmd.ExecuteReader();
         }
 
         public static IDataReader QueryAsReader(string query, Dictionary<string, string> parameters) {
-            IDbCommand _cmd = _dbcon.CreateCommand();
-            _cmd.CommandText = query;
+            IDbCommand cmd = _dbcon.CreateCommand();
+            cmd.CommandText = query;
 
-            foreach(KeyValuePair<string, string> _param in parameters) {
-                _cmd.Parameters.Add(new SqliteParameter(_param.Key, _param.Value));
+            foreach(KeyValuePair<string, string> param in parameters) {
+                cmd.Parameters.Add(new SqliteParameter(param.Key, param.Value));
             }
 
-            return _cmd.ExecuteReader();
+            return cmd.ExecuteReader();
         }
 
 
 
         public static List<Dictionary<string, object>> QueryAsList(string query) {
-            List<Dictionary<string, object>> _list = new List<Dictionary<string, object>>();
-            IDataReader _reader = QueryAsReader(query);
-            DataColumnCollection _columns = _reader.GetSchemaTable().Columns;
+            List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
+            IDataReader reader = QueryAsReader(query);
+            DataColumnCollection columns = reader.GetSchemaTable().Columns;
 
-            for (int r = 0; r < _reader.FieldCount; r++) {
-                _reader.Read();
+            for (int r = 0; r < reader.FieldCount; r++) {
+                reader.Read();
 
-                Dictionary<string, object> _record = new Dictionary<string, object>();
+                Dictionary<string, object> record = new Dictionary<string, object>();
 
-                foreach(DataColumn _column in _columns) {
-                    _record.Add(_column.ColumnName, _reader.GetValue(r));
+                foreach(DataColumn column in columns) {
+                    record.Add(column.ColumnName, reader.GetValue(r));
                 }
 
-                _list.Add(_record);
+                list.Add(record);
             }
 
-            _reader.Close();
-            return _list;
+            reader.Close();
+            return list;
         }
 
         public static List<Dictionary<string, object>> QueryAsList(string query, Dictionary<string, string> parameters) {
-            List<Dictionary<string, object>> _list = new List<Dictionary<string, object>>();
-            IDataReader _reader = QueryAsReader(query, parameters);
-            DataColumnCollection _columns = _reader.GetSchemaTable().Columns;
+            List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
+            IDataReader reader = QueryAsReader(query, parameters);
+            DataColumnCollection columns = reader.GetSchemaTable().Columns;
 
-            for (int r = 0; r < _reader.FieldCount; r++) {
-                _reader.Read();
+            for (int r = 0; r < reader.FieldCount; r++) {
+                reader.Read();
 
-                Dictionary<string, object> _record = new Dictionary<string, object>();
+                Dictionary<string, object> record = new Dictionary<string, object>();
 
-                foreach(DataColumn _column in _columns) {
-                    _record.Add(_column.ColumnName, _reader.GetValue(r));
+                foreach(DataColumn column in columns) {
+                    record.Add(column.ColumnName, reader.GetValue(r));
                 }
 
-                _list.Add(_record);
+                list.Add(record);
             }
-            _reader.Close();
-            return _list;
+            reader.Close();
+            return list;
         }
 
 
 
         private static string ReadFile(string path) {
-            StreamReader _sr = new StreamReader(path);
+            StreamReader sr = new StreamReader(path);
             string contents;
 
             try {
-                contents = _sr.ReadToEnd();
+                contents = sr.ReadToEnd();
             }
             catch(System.IO.IOException exception) {
                 return null;
@@ -160,97 +160,97 @@ namespace UnitySQL {
 
 
         public static void RunFile(string path) {
-            string _query = ReadFile(path);
-            Query(_query);
+            string query = ReadFile(path);
+            Query(query);
         }
 
         public static void RunFile(string path, Dictionary<string, string> parameters) {
-            string _query = ReadFile(path);
-            Query(_query, parameters);
+            string query = ReadFile(path);
+            Query(query, parameters);
         }
 
 
 
         public static IDataReader RunFileAsReader(string path) {
-            string _query = ReadFile(path);
+            string query = ReadFile(path);
 
-            return QueryAsReader(_query);
+            return QueryAsReader(query);
         }
 
         public static IDataReader RunFileAsReader(string path, Dictionary<string, string> parameters) {
-            string _query = ReadFile(path);
+            string query = ReadFile(path);
 
-            return QueryAsReader(_query, parameters);
+            return QueryAsReader(query, parameters);
         }
 
 
 
         public static List<Dictionary<string, object>> RunFileAsList(string path) {
-            string _query = ReadFile(path);
+            string query = ReadFile(path);
 
-            return QueryAsList(_query);
+            return QueryAsList(query);
         }
 
         public static List<Dictionary<string, object>> RunFileAsList(string path, Dictionary<string, string> parameters) {
-            string _query = ReadFile(path);
+            string query = ReadFile(path);
 
-            return QueryAsList(_query, parameters);
+            return QueryAsList(query, parameters);
         }
 
         
 
         public static void Insert(string table, List<Dictionary<string, object>> data) {
-            StringBuilder _sql = new StringBuilder();
-            _sql.Append("INSERT INTO `" + table + "` (");
+            StringBuilder sql = new StringBuilder();
+            sql.Append("INSERT INTO `" + table + "` (");
 
             if(data.Count == 0) {
                 return;
             }
             
-            int _index = 0;
-            foreach(KeyValuePair<string, object> _pair in data[0]) {
-                _sql.Append(" `");
-                _sql.Append(_pair.Key);
-                _sql.Append("`");
+            int index = 0;
+            foreach(KeyValuePair<string, object> pair in data[0]) {
+                sql.Append(" `");
+                sql.Append(pair.Key);
+                sql.Append("`");
 
-                if (_index < (data[0].Count - 1)) {
-                    _sql.Append(",");
+                if (index < (data[0].Count - 1)) {
+                    sql.Append(",");
                 }
 
-                _index++;
+                index++;
             }
 
-            _sql.Append(")\n");
-            _sql.Append("VALUES");
+            sql.Append(")\n");
+            sql.Append("VALUES");
 
-            _index = 0;
-            foreach(Dictionary<string, object> _row in data) {
-                _index++;
-                _sql.Append("(");
+            index = 0;
+            foreach(Dictionary<string, object> row in data) {
+                index++;
+                sql.Append("(");
 
-                int _index2 = 0;
-                foreach(KeyValuePair<string, object> _pair in _row) {
-                    _sql.Append(" '");
-                    _sql.Append(_pair.Value);
-                    _sql.Append("'");
+                int index2 = 0;
+                foreach(KeyValuePair<string, object> pair in row) {
+                    sql.Append(" '");
+                    sql.Append(pair.Value);
+                    sql.Append("'");
 
-                    if(_index2 < (_row.Count - 1)) {
-                        _sql.Append(",");
+                    if(index2 < (row.Count - 1)) {
+                        sql.Append(",");
                     }
 
-                    _index2++;
+                    index2++;
                 }
 
-                _sql.Append(")");
+                sql.Append(")");
 
-                if (_index < (data.Count - 1)) {
-                    _sql.Append(",\n");
+                if (index < (data.Count - 1)) {
+                    sql.Append(",\n");
                 }
 
-                _index++;
+                index++;
             }
 
-            Query(_sql.ToString());
+            Query(sql.ToString());
         }
     }
 }

@@ -44,7 +44,7 @@ namespace UnitySQL {
             _dbcon = (IDbConnection) new SqliteConnection(_uri);
             _dbcon.Open();
         }
-        
+
 
 
         public static int Count(string table, string column) {
@@ -57,7 +57,7 @@ namespace UnitySQL {
 
             return count;
         }
-        
+
 
 
         public static void Query(string query) {
@@ -197,7 +197,7 @@ namespace UnitySQL {
             return QueryAsList(query, parameters);
         }
 
-        
+
 
         public static void Insert(string table, List<Dictionary<string, object>> data) {
             StringBuilder sql = new StringBuilder();
@@ -206,7 +206,7 @@ namespace UnitySQL {
             if(data.Count == 0) {
                 return;
             }
-            
+
             int index = 0;
             foreach(KeyValuePair<string, object> pair in data[0]) {
                 sql.Append(" `");

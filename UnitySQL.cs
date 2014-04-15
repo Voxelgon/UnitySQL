@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Mono.Data.SqliteClient;
 
 namespace UnitySQL {
@@ -60,23 +61,24 @@ namespace UnitySQL {
 
 
 
-        public static void Query(string query) {
-            IDbCommand cmd = _dbcon.CreateCommand();
-            cmd.CommandText = query;
-            IDataReader reader = cmd.ExecuteReader();
-            reader.Close();
-        }
+        public static void Query(string query, Dictionary<string, string> parameters = null, bool threaded = true) {
 
-        public static void Query(string query, Dictionary<string, string> parameters) {
-            IDbCommand cmd = _dbcon.CreateCommand();
-            cmd.CommandText = query;
+            if (threaded == true) {
+                Thread sqlThread = new Thread(() => Query(query, parameters));
+                sqlThread.Start();
+            } else {
+                IDbCommand cmd = _dbcon.CreateCommand();
+                cmd.CommandText = query;
 
-            foreach(KeyValuePair<string, string> param in parameters) {
-                cmd.Parameters.Add(new SqliteParameter(param.Key, param.Value));
+                if (parameters != null) {
+                    foreach(KeyValuePair<string, string> param in parameters) {
+                        cmd.Parameters.Add(new SqliteParameter(param.Key, param.Value));
+                    }
+                }
+
+                IDataReader reader = cmd.ExecuteReader();
+                reader.Close();
             }
-
-            IDataReader reader = cmd.ExecuteReader();
-            reader.Close();
         }
 
 
@@ -159,25 +161,15 @@ namespace UnitySQL {
         }
 
 
-        public static void RunFile(string path) {
-            string query = ReadFile(path);
-            Query(query);
-        }
 
-        public static void RunFile(string path, Dictionary<string, string> parameters) {
+        public static void RunFile(string path, Dictionary<string, string> parameters = null, bool threaded = true) {
             string query = ReadFile(path);
-            Query(query, parameters);
+            Query(query, parameters, threaded);
         }
 
 
 
-        public static IDataReader RunFileAsReader(string path) {
-            string query = ReadFile(path);
-
-            return QueryAsReader(query);
-        }
-
-        public static IDataReader RunFileAsReader(string path, Dictionary<string, string> parameters) {
+        public static IDataReader RunFileAsReader(string path, Dictionary<string, string> parameters = null) {
             string query = ReadFile(path);
 
             return QueryAsReader(query, parameters);
@@ -185,13 +177,7 @@ namespace UnitySQL {
 
 
 
-        public static List<Dictionary<string, object>> RunFileAsList(string path) {
-            string query = ReadFile(path);
-
-            return QueryAsList(query);
-        }
-
-        public static List<Dictionary<string, object>> RunFileAsList(string path, Dictionary<string, string> parameters) {
+        public static List<Dictionary<string, object>> RunFileAsList(string path, Dictionary<string, string> parameters = null) {
             string query = ReadFile(path);
 
             return QueryAsList(query, parameters);

@@ -238,5 +238,12 @@ namespace UnitySQL {
 
             Query(sql.ToString());
         }
+
+        public static void Insert(string table, Dictionary<string, object> data) {
+            List<Dictionary<string, object>> dataList = new List<Dictionary<string, object>>();
+            dataList.Add(data);
+
+            Insert(table, dataList);
+        }
     }
 }

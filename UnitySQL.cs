@@ -103,43 +103,20 @@ namespace UnitySQL {
 
 
 
-        public static List<Dictionary<string, object>> QueryAsList(string query) {
+        public static List<Dictionary<string, object>> QueryAsList(string query, string parameters = null, bool threaded = true) {
             List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
-            IDataReader reader = QueryAsReader(query);
-            DataColumnCollection columns = reader.GetSchemaTable().Columns;
-
-            for (int r = 0; r < reader.FieldCount; r++) {
-                reader.Read();
-
+            IDataReader reader = QueryAsReader(query, parameters, threaded);
+ 
+            while(reader.Read()) {
                 Dictionary<string, object> record = new Dictionary<string, object>();
 
-                foreach(DataColumn column in columns) {
-                    record.Add(column.ColumnName, reader.GetValue(r));
+                for ( int i = 0; i < reader.FieldCount; i++) {
+                    record.Add(reader.GetName(i), reader.GetValue(i));
                 }
 
                 list.Add(record);
             }
 
-            reader.Close();
-            return list;
-        }
-
-        public static List<Dictionary<string, object>> QueryAsList(string query, Dictionary<string, string> parameters) {
-            List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
-            IDataReader reader = QueryAsReader(query, parameters);
-            DataColumnCollection columns = reader.GetSchemaTable().Columns;
-
-            for (int r = 0; r < reader.FieldCount; r++) {
-                reader.Read();
-
-                Dictionary<string, object> record = new Dictionary<string, object>();
-
-                foreach(DataColumn column in columns) {
-                    record.Add(column.ColumnName, reader.GetValue(r));
-                }
-
-                list.Add(record);
-            }
             reader.Close();
             return list;
         }

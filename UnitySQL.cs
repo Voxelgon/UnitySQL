@@ -82,20 +82,14 @@ namespace UnitySQL {
         }
 
 
-
-        public static IDataReader QueryAsReader(string query) {
+        public static IDataReader QueryAsReader(string query, Dictionary<string, string> parameters = null) {
             IDbCommand cmd = _dbcon.CreateCommand();
             cmd.CommandText = query;
 
-            return cmd.ExecuteReader();
-        }
-
-        public static IDataReader QueryAsReader(string query, Dictionary<string, string> parameters) {
-            IDbCommand cmd = _dbcon.CreateCommand();
-            cmd.CommandText = query;
-
-            foreach(KeyValuePair<string, string> param in parameters) {
-                cmd.Parameters.Add(new SqliteParameter(param.Key, param.Value));
+            if (parameters != null) {
+                foreach(KeyValuePair<string, string> param in parameters) {
+                    cmd.Parameters.Add(new SqliteParameter(param.Key, param.Value));
+                }
             }
 
             return cmd.ExecuteReader();

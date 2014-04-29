@@ -103,10 +103,10 @@ namespace UnitySQL {
 
 
 
-        public static List<Dictionary<string, object>> QueryAsList(string query, string parameters = null, bool threaded = true) {
+        public static List<Dictionary<string, object>> QueryAsList(string query, Dictionary<string, string> parameters = null) {
             List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
-            IDataReader reader = QueryAsReader(query, parameters, threaded);
- 
+            IDataReader reader = QueryAsReader(query, parameters);
+
             while(reader.Read()) {
                 Dictionary<string, object> record = new Dictionary<string, object>();
 

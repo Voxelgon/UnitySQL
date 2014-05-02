@@ -97,15 +97,15 @@ namespace UnitySQL {
 
 
 
-        public static List<Dictionary<string, object>> QueryAsList(string query, Dictionary<string, string> parameters = null) {
-            List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
+        public static List<Dictionary<string, string>> QueryAsList(string query, Dictionary<string, string> parameters = null) {
+            List<Dictionary<string, string>> list = new List<Dictionary<string, string>>();
             IDataReader reader = QueryAsReader(query, parameters);
 
             while(reader.Read()) {
-                Dictionary<string, object> record = new Dictionary<string, object>();
+                Dictionary<string, string> record = new Dictionary<string, string>();
 
                 for ( int i = 0; i < reader.FieldCount; i++) {
-                    record.Add(reader.GetName(i), reader.GetValue(i));
+                    record.Add(reader.GetName(i), (string) reader.GetValue(i));
                 }
 
                 list.Add(record);
@@ -148,7 +148,7 @@ namespace UnitySQL {
 
 
 
-        public static List<Dictionary<string, object>> RunFileAsList(string path, Dictionary<string, string> parameters = null) {
+        public static List<Dictionary<string, string>> RunFileAsList(string path, Dictionary<string, string> parameters = null) {
             string query = ReadFile(path);
 
             return QueryAsList(query, parameters);
